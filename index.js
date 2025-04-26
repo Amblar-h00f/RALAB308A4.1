@@ -1,5 +1,5 @@
 import * as Carousel from "./Carousel.js";
-import axios from "axios";
+import axios from 'axios';
 
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
@@ -11,16 +11,19 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
+// SET API config
 const API_KEY = "API_KEY";
-//whaaat
-/**
- * 1. Create an async function "initialLoad" that does the following:
- * - Retrieve a list of breeds from the cat API using fetch().
- * - Create new <options> for each of these breeds, and append them to breedSelect.
- *  - Each option should have a value attribute equal to the id of the breed.
- *  - Each option should display text equal to the name of the breed.
- * This function should execute immediately.
- */
+axios.defaults.baseURL = 'https://api.thecatapi.com/v1';
+axios.defaults.headers.common['x-api-key'] = API_KEY;
+
+//Axios interceptors
+axios.interceptors.request.use(config => {
+  progressBar.style.width = '0%';
+  document.body.style.cursor = 'progress';
+  config.metadata = { startTime: new Date()};
+  return config;
+})
+
 async function initialLoad() {
 
   try {
@@ -46,8 +49,14 @@ breeds.forEach(breed => {
   console.error('Failed to load breeds:', error);
  }
 }
+// Inside initialLoad function, after breedSelect.appendChild(option);
+breedSelect.addEventListener('change', handleBreedSelection);
+breedSelect.dispatchEvent(new Event('change')); // Trigger initial load
 
+async function handleBreedSelection() {}
+function initCarouselControls(){}
 
+document.addEventListener('DOMContentLoaded', initialLoad);
 
 
 /**
