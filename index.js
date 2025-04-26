@@ -23,25 +23,29 @@ const API_KEY = "API_KEY";
  */
 async function initialLoad() {
 
-  try{
+  try {
+       const response = await
+    fetch('https://api.thecatapi.com/v1/breeds');
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    const breeds = await response.json();
 
-    const response = await
-    fetch('https://cdn2.thecatapi.com/images/ebv.jpg', {
-      headers: {
-        'x-api-key': live_tsndXzLrI7HdKsi6FZcRdMIWKaWzfCdgOqL18wzJe6W8JajKlFbvNja15cjFZQDy
-       }
+    const breedSelect = 
+    document.getElementById('breedSelect');
+    
+breedSelect.innerHTML = '';
 
-    })
-  }
-
-
-catch (error => console.error(error));
-
-
-  
-
+breeds.forEach(breed => {
+  const option = document.createElement('option');
+  option.value = breed.id;
+  option.textContent = breed.name;
+  breedSelect.appendChild(option);
+}); 
+ } catch (error) {
+  console.error('Failed to load breeds:', error);
+ }
 }
-
 
 
 
