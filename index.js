@@ -21,6 +21,14 @@ const API_KEY = "live_tsndXzLrI7HdKsi6FZcRdMIWKaWzfCdgOqL18wzJe6W8JajKlFbvNja15c
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+async function initialLoad() {
+  return "Hello";
+
+}
+
+
+
+
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
