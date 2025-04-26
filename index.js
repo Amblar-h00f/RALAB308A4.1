@@ -11,7 +11,7 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "";
+const API_KEY = "live_tsndXzLrI7HdKsi6FZcRdMIWKaWzfCdgOqL18wzJe6W8JajKlFbvNja15cjFZQDy";
 //whaaat
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -110,4 +110,3 @@ export async function favourite(imgId) {
  *   your code should account for this.
  */
 
-testing 
