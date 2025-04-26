@@ -11,7 +11,7 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "live_tsndXzLrI7HdKsi6FZcRdMIWKaWzfCdgOqL18wzJe6W8JajKlFbvNja15cjFZQDy";
+const API_KEY = "API_KEY";
 //whaaat
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -22,7 +22,23 @@ const API_KEY = "live_tsndXzLrI7HdKsi6FZcRdMIWKaWzfCdgOqL18wzJe6W8JajKlFbvNja15c
  * This function should execute immediately.
  */
 async function initialLoad() {
-  return "Hello";
+
+  try{
+
+    const response = await
+    fetch('https://cdn2.thecatapi.com/images/ebv.jpg', {
+      headers: {
+        'x-api-key': live_tsndXzLrI7HdKsi6FZcRdMIWKaWzfCdgOqL18wzJe6W8JajKlFbvNja15cjFZQDy
+       }
+
+    })
+  }
+
+
+catch (error => console.error(error));
+
+
+  
 
 }
 
