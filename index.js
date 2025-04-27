@@ -49,6 +49,7 @@ async function initialLoad() {
     const { data: breeds } = await axios.get('/breeds',) {
       onDownloadProgress: updateProgress
     });
+    
   breedSelect.innerHTML = breeds.map(breed =>
     `<option value="${breed.id}">${breed.name}</option>`).join('');
 
@@ -72,51 +73,91 @@ async function initialLoad() {
       const {data: images} = await axios.get('/images/search',
 {
   params: {breed_ids: breedId, limit: 5},
-  onDownloadProgress: updateProgree
+  onDownloadProgress: updateProgress
 });
 
 //Create carousel items
 const template = 
+document.getElementById('carouselItemTemplate');
+images.forEach((image, index) => {
+  const clone = template.contentEditable.cloneNode(true);
+  const item = clone.querySelector('.carousel-item');
+  const img = clone.querySelector('img');
+  const favButton = clone.querySelector('.favourite-button');
 
+item.classList.toggle('active', index === 0);
+img.src = image.url;
+img.alt = `Cat image ${index + 1}`;
+favButton.dateset.imgId = image.id;
+favButton.onclick = () => Carousel.favourite(image.id);
 
+carouselInner.appendChild(clone);
 
+});
 
+//Fetch breed info
+const {data: breedData} = await
+axios.get(`/breeds/${breedId}`);
+infoDump.innerHTML = `
+<div class="breed-info">
+<h2>${breedData.name}</h2>
+<p><strong>Origin:</strong> ${breedData.orgin ||'N/A'}</p>
+<p><strong>Life Span:</strong> ${breedData.life_span || 'N/A'} years</p>
+        <p>${breedData.description || ''}</p>
+      </div>
+`;
 
-
-
-async function initialLoad() {
-
-  try {
-       const response = await
-    fetch('https://api.thecatapi.com/v1/breeds');
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
+    }catch (error) {
+      infoDump.innerHTML = `<p class="error">Error:${error.message}</p>`;
     }
-    const breeds = await response.json();
+  }
+  //Favourite functonality
+  export async function favourite(imgId) {
+    try {
+      const {data: existing} = await axios.get('/favourites');
+      const existingFav = existing.find(fav => fav.image_id === imgId);
 
-    const breedSelect = 
-    document.getElementById('breedSelect');
-    
-breedSelect.innerHTML = '';
-
-breeds.forEach(breed => {
-  const option = document.createElement('option');
-  option.value = breed.id;
-  option.textContent = breed.name;
-  breedSelect.appendChild(option);
-}); 
- } catch (error) {
-  console.error('Failed to load breeds:', error);
- }
+ if (existingFav) {
+  await axios.delete(`/favourites/${existingFav.id}`);
+ } else {
+  await axios.post('/favourites', {image_id: imgId});
 }
-// Inside initialLoad function, after breedSelect.appendChild(option);
-breedSelect.addEventListener('change', handleBreedSelection);
-breedSelect.dispatchEvent(new Event('change')); // Trigger initial load
+getFavouritesBtn();
+} catch (error) {
+  console.error('Favourite error:', error);
+ } 
+}
 
-async function handleBreedSelection() {}
-function initCarouselControls(){}
+//Get favourites handler
+async function getFavourites() {
+  try {
+    const {data: favourites} = await
+    axios.get('/favourites');
+    const carouselInner = 
+    document.getElementById('carouselInner');
 
+    carouselInner.innerHTML = '';
+    infoDump.innerHTML = '<h3>Your Favourites</h3>';
+
+    favourites.forEach((fav, index) => {
+      const clone = document.importNode(
+
+        document.getElementById('carouselItemTemplate').content,
+        true
+      );
+    });
+  } catch (error) {
+    console.error('Favourites error:', error);
+  }
+}
+
+//Initialize
+getFavouritesBtn.addEventListener('click', getFavourites);
 document.addEventListener('DOMContentLoaded', initialLoad);
+
+
+
+
 
 
 /**
