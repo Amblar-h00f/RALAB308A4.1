@@ -22,7 +22,67 @@ axios.interceptors.request.use(config => {
   document.body.style.cursor = 'progress';
   config.metadata = { startTime: new Date()};
   return config;
-})
+});
+
+axios.interceptors.response.use(response => {
+  const duration = new Date() -
+  response.config.metadata.startTime;
+  progressBar.style.width = '100%';
+  setTimeout(() => progressBar.style.width = '0%', 500);
+  document.body.style.cursor = 'default';
+  console.log(`Request completed in ${duration}ms`);
+  return response;
+}, error => {
+  document.body.style.cursor = 'default';
+  return Promise.reject(error);
+});
+// progress handler
+function updateProgress(e) {
+  if (e.lengthComputable) {
+    const percent = (e.loaded / e.total) * 100;
+    progressBar.style.width = `${percent}%`;
+  }
+}
+// Initial load
+async function initialLoad() {
+  try {
+    const { data: breeds } = await axios.get('/breeds',) {
+      onDownloadProgress: updateProgress
+    });
+  breedSelect.innerHTML = breeds.map(breed =>
+    `<option value="${breed.id}">${breed.name}</option>`).join('');
+
+    breedSelect.addEventListener('change',
+      handleBreedSelection);
+      breedSelect.dispatchEvent(new Event('change'));
+    } catch (error) {
+      console.error('Failed to load breeds:', error);
+    }
+  }
+  // Breed selection handler
+  async function handleBreedSelection() {
+    try {
+      const breedId = this.value;
+      const carouselInner =
+      document.getElementById('carouselInner');
+      carouselInner.innerHTML = '';
+      infoDump.innerHTML = '<h3>Loading breed information</h3>';
+
+      //Fetch images
+      const {data: images} = await axios.get('/images/search',
+{
+  params: {breed_ids: breedId, limit: 5},
+  onDownloadProgress: updateProgree
+});
+
+//Create carousel items
+const template = 
+
+
+
+
+
+
 
 async function initialLoad() {
 
